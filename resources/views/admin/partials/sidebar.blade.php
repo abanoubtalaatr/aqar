@@ -396,4 +396,11 @@
              </li>
          @endcan
 
+
+         <li class="nav-item">
+             <a href="{{ route('chatify') }}" class="nav-link">
+                <i class="nav-icon fas fa-comments"></i>
+                 <p class="text">@lang('dashboard.chat')</p>
+             </a>
+         </li>
          </ul>

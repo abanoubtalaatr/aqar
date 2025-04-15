@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
+use Munafio\Chatify\Traits\Chatify;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -19,7 +21,6 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
     use HasRoles;
     use SoftDeletes;
-
 
     protected $guarded = [];
 
@@ -188,5 +189,23 @@ class User extends Authenticatable implements JWTSubject
     public function visits()
     {
         return $this->hasMany(UserVisit::class);
+    }
+    public function getAvatarAttribute($value)
+    {
+        // If value is empty or contains a URL, use default
+        if (empty($value) || $value == '') {
+            $value = 'avatar.png';
+        }
+
+        // Remove any existing path components
+        $cleanName = basename($value);
+
+        // Verify file exists
+        if (!Storage::exists('public/users-avatar/'.$cleanName)) {
+            $cleanName = 'avatar.png';
+        }
+
+        // Return SINGLE instance of the URL
+        return asset('storage/users-avatar/'.$cleanName);
     }
 }

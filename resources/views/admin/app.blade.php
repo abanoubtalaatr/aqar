@@ -32,7 +32,7 @@
         <link rel="stylesheet" href="{{ dashboardAsset('css/dev.css') }}" />
     @endif
     @yield('styles')
-    
+    @chatifyStyles()
 
 </head>
 
@@ -188,6 +188,7 @@
 
         }
     </script>
+    @chatifyScripts()
 </body>
 
 </html>
